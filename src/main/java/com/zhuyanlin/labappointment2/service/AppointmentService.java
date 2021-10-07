@@ -129,6 +129,9 @@ public class AppointmentService {
         removeCourseTime(ctId, ct.getLid());
     }
 
+    /*
+    * 使用 courseTimeMapper.getTeacherAppointment()
+    * */
     @Cacheable(value = "teacherAppointment", key = "#tId")
     public List<TeacherAppointmentVO> getAppointment(Long tId) {
         List<Course> courses = courseMapper.selectByMap(Map.of("tid", tId));
@@ -158,6 +161,10 @@ public class AppointmentService {
         return TeacherAppointmentVOS;
     }
 
+    /*
+    * 可以直接 course_time join course_week
+    * 使用 courseTimeMapper.getLabAppointment()
+    * */
     @Cacheable(value = "allAppointment", key = "#lId")
     public List<AppointmentVO> getAppointmentByLId(Long lId) {
         List<CourseTime> cts = courseTimeMapper.selectByMap(Map.of("lid", lId));

@@ -28,6 +28,27 @@
 - spring-security-crypto 加密依赖
 - spring-boot-aop AOP依赖
 - caffeine 缓存依赖
+- slf4j 日志框架
+
+## 特色
+
+- 使用 `Restful` 风格的接口，用一个 URI 表示一个资源，并通过 GET、POST、PUT、DELETE 操作资源。
+- 前后端约定了创建 `ResultVO` 类用于封装数据，包含状态码，信息和数据，其中数据封装在 Map 中以键值对的形式返回。并且通过 `Jackson` 框架序列化所有属性。
+- 由于 springboot 不会处理受检异常，所以显示捕获受检异常，转抛为非受检异常，并且自定义异常controller，创建方法捕获自定义异常，返回 JSON 数据。
+- 使用 springboot 验证依赖检测前端请求参数，通过注解的方式进行简单的数值验证，如 `@NotNull`、`@Max/@Min`等，不符合的情况下抛出异常，并由自定义异常 controller 捕获对应的异常，返回 JSON 数据。
+- 使用 spring 提供的安全框架，注入 `PasswordEncoder` 组件，对密码进行非对称加密入库，可以防止撞库或脱库时对用户密码的泄露。
+- 使用 `token` 对身份进行验证，Restful 设计思想中，客户端不再保存用户状态，用户登录后直接将身份信息保存在 header 中，客户端和服务器的身份通过 `token` 中的信息来判别。同时 `token` 使用 Spring-Security 提供的非对称加密技术，可自定义密钥和盐值，通过 `@Value` 注解并结合 `SpEL`表达式，可以将`application.yml`配置中的信息注入。
+- 使用三个 `Interceptor` 对用户身份进行拦截，首先通过 `LoginInterceptor` 的用户可以访问公共接口，通过 `adminInterceptor` 的用户可以访问管理员接口，通过 `teacherInterceptor` 的用户可以访问教师接口。拦截的方法就是通过判断用户 `header` 中的 `token` ，判断其中的身份，给予对应的权限。
+- 使用 `Caffeine` 缓存技术对系统中的预约信息进行缓存，如对应教师的预约信息，对应实验室的预约信息。
+- 使用 `Mybatis-Plus`持久层框架，可以通过实现 `BaseMapper` 接口，直接调用插入、查询等方法。
+- 使用 MyBatis xml 的动态SQL查询实现数据按条件查询的功能。
+- 在数据库设计阶段没有使用外键，而是使用的索引。级联操作在应用层用代码实现。
+
+## 缺陷
+
+- token 是自定义实现的，没有设置过期时间。可以使用缓存，如 redis，对 token 数据进行管理。
+- 缓存技术使用的是 `Caffeine`，而不是 `Redis`，所以只适用于单机缓存解决方案，而对于集群服务不支持。
+- 数据的查询与表与表之间的关联是在应用层对各个表进行查询实现的，实际上可以使用 `Join` 完成表的连接进行操作。
 
 ## 数据库依赖
 
