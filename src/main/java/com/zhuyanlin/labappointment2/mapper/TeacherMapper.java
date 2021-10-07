@@ -17,4 +17,6 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
     Integer getTeachersCount();
 
     List<Teacher> getTeachers(TeacherDO teacherDO);
+
+    void addTeacher1(TeacherDO teacherDO);
 }

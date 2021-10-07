@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherDO {
+    private Integer id;
+
     @Size(max = 10)
     private String nickName;
 

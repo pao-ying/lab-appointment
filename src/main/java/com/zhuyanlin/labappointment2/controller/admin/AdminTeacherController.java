@@ -9,14 +9,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 @Api(tags = {"操作教师 Authorization: Admin"})
 @RestController
 @RequestMapping("/api/admin/teacher")
+@Validated
 public class AdminTeacherController {
     @Autowired
     private TeacherService teacherService;
@@ -42,7 +45,7 @@ public class AdminTeacherController {
 
     @ApiOperation("更新教师")
     @PutMapping("/{tId}")
-    public ResultDTO updateTeacher(@PathVariable Long tId, @RequestBody TeacherDO teacherDO) {
+    public ResultDTO updateTeacher(@PathVariable Long tId, @Valid @RequestBody TeacherDO teacherDO) {
         teacherService.updateTeacher(tId, teacherDO);
         return ResultDTO.success(Map.of(), "修改教师成功");
     }
